@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Tags</h3>
+    <a href="{% url "list:tag-create" %}" class="btn btn-primary">Create</a>
+  </div>
+
+  <div class="row">
+    {% for tag in tag_list %}
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><a href="{% url "list:tag-detail" pk=tag.id %}">{{ tag.name }}</a></h5>
+            <div class="d-flex justify-content-between">
+              <a href="{% url "list:tag-update" pk=tag.id %}" class="btn btn-warning btn-sm">Update</a>
+              <a href="{% url "list:tag-delete" pk=tag.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

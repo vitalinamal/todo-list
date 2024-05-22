@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>TODO List</h3>
+      <a href="{% url "list:task-create" %}" class="btn btn-primary">Create</a>
+    </div>
+
+    <div class="list-group">
+      {% for task in task_list %}
+        <div class="list-group-item list-group-item-action flex-column align-items-start mb-3">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ task.content }}</h5>
+            <small class="text-muted">{{ task.created_at }}</small>
+          </div>
+          <p class="mb-1">
+            {% if task.completed %}
+              <span class="badge bg-success">Done</span>
+            {% else %}
+              <span class="badge bg-danger">Not done</span>
+            {% endif %}
+          </p>
+          {% if task.deadline %}
+            <p class="mb-1"><small>Deadline: {{ task.deadline }}</small></p>
+          {% endif %}
+          {% if task.tags.all %}
+            <p class="mb-0">
+              <small>Tags:
+                {% for tag in task.tags.all %}
+                  <span class="badge bg-secondary"><a style="text-decoration: none; color: white"
+                                                      href="{% url "list:tag-detail" pk=tag.id %}">{{ tag }}</a></span>
+                {% endfor %}
+              </small>
+            </p>
+          {% endif %}
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <div>
+              <a href="{% url 'list:task-update' pk=task.id %}" class="btn btn-warning btn-sm me-2">Update</a>
+              <a href="{% url 'list:task-delete' pk=task.id %}" class="btn btn-danger btn-sm me-2">Delete</a>
+            </div>
+            <div>
+              {% if task.completed %}
+                <form action="{% url "list:task-complete-undo" pk=task.id %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary btn-sm">Undo</button>
+                </form>
+              {% else %}
+                <form action="{% url "list:task-complete-undo" pk=task.id %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-success btn-sm">Complete</button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
